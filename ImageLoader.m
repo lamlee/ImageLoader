@@ -119,8 +119,10 @@
 				
 		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {					
 			[self.delegate loaderDidFinishWithResult:[UIImage imageWithContentsOfFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]] fromCache:YES];
-			return YES;
 		}		
+		
+		return YES;
+		
 	} else {
 
 		NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:self.filepath]
@@ -147,7 +149,7 @@
 				
 			return NO;
 		}		
-     }	
+  }	
 	return NO;	
 }
 	
