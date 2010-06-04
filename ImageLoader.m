@@ -57,6 +57,48 @@
 	[super dealloc];
 }
 
++(BOOL)loadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+
+	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
+	
+	if (loader != nil) {
+		[loader loadAndCache:NO];
+	} 
+	
+	return loader;	
+}
+
++(id)loadAndCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	
+	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
+	
+	if (loader != nil) {
+		[loader loadAndCache:YES];
+	} 
+	
+	return loader;	
+}
+
++(id)forceReloadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
+	
+	if (loader != nil) {
+		[loader loadAndCache:NO force:YES];
+	} 
+	
+	return loader;	
+}
+
++(id)refreshCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
+	
+	if (loader != nil) {
+		[loader loadAndCache:YES force:YES];
+	} 
+	
+	return loader;	
+}
+
 -(BOOL)loadAndCache {
 	return [self loadAndCache:YES force:NO];
 }

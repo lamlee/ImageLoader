@@ -18,7 +18,6 @@
 	BOOL shouldCacheImage;
 }
 
-
 @property(nonatomic, assign) NSObject <ImageLoaderDelegate> *delegate;
 @property(nonatomic, retain) NSString *filename;
 @property(nonatomic, retain) NSString *filepath;
@@ -30,6 +29,12 @@
 
 -(id)initWithDelegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
 -(id)initWithRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
+
++(id)loadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
++(id)loadAndCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
++(id)forceReloadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
++(id)refreshCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
+
 -(BOOL)loadAndCache;
 -(BOOL)loadAndCache:(BOOL)doCaching;
 -(BOOL)loadAndCache:(BOOL)doCaching force:(BOOL)reload;
