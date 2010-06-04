@@ -11,7 +11,7 @@
 
 #define CacheDirectory NSTemporaryDirectory()
 
-@synthesize delegate, filename, filepath, cachePath, theConnection, receivedData, shouldCacheImage;
+@synthesize delegate, filename, filepath, cachePath, theConnection, receivedData, shouldCacheImage, cacheIdentifier;
 
 
 -(id)init {
@@ -42,8 +42,13 @@
 	self = [self initWithDelegate:theDelegate];
 	
 	if (self != nil) {
-		self.filename = [[[aPath lastPathComponent] componentsSeparatedByString:@"?"] objectAtIndex:0];
-		self.filepath = aPath;				
+		self.filename = [[[aPath lastPathComponent] componentsSeparatedByString:@"?"] objectAtIndex:0];		
+		self.filepath = aPath;	
+		
+		const char *cString = [aPath UTF8String];
+		unsigned char result[CC_MD5_DIGEST_LENGTH];
+		CC_MD5(cString, strlen(cString), result);
+		self.cacheIdentifier = [NSString stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15]];			
 	}	
 	return self;
 }
@@ -51,13 +56,14 @@
 - (void) dealloc {
 	self.delegate = nil;
 	self.filename = nil;
+	self.cacheIdentifier = nil;
 	self.filepath = nil;
 	self.theConnection = nil;
 	self.receivedData = nil;
 	[super dealloc];
 }
 
-+(BOOL)loadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++(id)loadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
@@ -108,12 +114,13 @@
 }
 
 -(BOOL)loadAndCache:(BOOL)doCaching force:(BOOL)reload {
-
-	if(reload && [[NSFileManager defaultManager] fileExistsAtPath:[self.cachePath stringByAppendingPathComponent:self.filename]]) {
+	
+	if(!reload && [[NSFileManager defaultManager] fileExistsAtPath:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]]) {			
 				
-		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {
-			[self.delegate loaderDidFinishWithResult:[UIImage imageWithContentsOfFile:[self.cachePath stringByAppendingPathComponent:self.filename]] fromCache:YES];
-		}
+		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {					
+			[self.delegate loaderDidFinishWithResult:[UIImage imageWithContentsOfFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]] fromCache:YES];
+			return YES;
+		}		
 	} else {
 
 		NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:self.filepath]
@@ -169,10 +176,10 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	
-	if (shouldCacheImage) {
-		[self.receivedData writeToFile:[self.cachePath stringByAppendingPathComponent:self.filename] atomically:YES];
+	if (shouldCacheImage) {		
+		[self.receivedData writeToFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier] atomically:YES];
 	}
-	
+
 	UIImage *image = [UIImage imageWithData:self.receivedData];
 	
 	

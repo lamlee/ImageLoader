@@ -6,7 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonDigest.h>
 #import "ImageLoaderDelegate.h"
+
 
 @interface ImageLoader : NSObject {
 	__weak NSObject <ImageLoaderDelegate> *delegate;
@@ -16,6 +18,7 @@
 	NSMutableData *receivedData;
 	NSURLConnection *theConnection;
 	BOOL shouldCacheImage;
+	NSString *cacheIdentifier;
 }
 
 @property(nonatomic, assign) NSObject <ImageLoaderDelegate> *delegate;
@@ -25,7 +28,7 @@
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, assign) BOOL shouldCacheImage;
-
+@property(nonatomic, retain) NSString *cacheIdentifier;
 
 -(id)initWithDelegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
 -(id)initWithRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
