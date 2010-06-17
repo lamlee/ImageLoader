@@ -58,6 +58,7 @@
 	self.filename = nil;
 	self.cacheIdentifier = nil;
 	self.filepath = nil;
+	self.cachePath = nil;
 	self.theConnection = nil;
 	self.receivedData = nil;
 	[super dealloc];
@@ -116,9 +117,12 @@
 -(BOOL)loadAndCache:(BOOL)doCaching force:(BOOL)reload {
 	
 	if(!reload && [[NSFileManager defaultManager] fileExistsAtPath:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]]) {			
-				
-		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {					
-			[self.delegate loaderDidFinishWithResult:[UIImage imageWithContentsOfFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]] fromCache:YES];
+		
+		NSLog(@"Loading file from cache: %@", [self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]);
+		
+		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {
+			UIImage *image = [UIImage imageWithContentsOfFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]];
+			[self.delegate loaderDidFinishWithResult:image fromCache:YES];
 		}		
 		
 		return YES;
@@ -129,7 +133,7 @@
 											cachePolicy:NSURLRequestUseProtocolCachePolicy
 										timeoutInterval:5.0];
 
-		self.theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+		self.theConnection = [[[NSURLConnection alloc] initWithRequest:theRequest delegate:self] autorelease];
 
 
 		if (self.theConnection) {
@@ -149,7 +153,7 @@
 				
 			return NO;
 		}		
-  }	
+	}	
 	return NO;	
 }
 	
@@ -178,15 +182,21 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	
-	if (shouldCacheImage) {		
-		[self.receivedData writeToFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier] atomically:YES];
-	}
-
 	UIImage *image = [UIImage imageWithData:self.receivedData];
 	
+	if (image != nil) {
 	
-	if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {		
-		[self.delegate loaderDidFinishWithResult:image fromCache:NO];
+		if (shouldCacheImage) {		
+			[self.receivedData writeToFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier] atomically:YES];
+		}
+		
+		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {		
+			[self.delegate loaderDidFinishWithResult:image fromCache:NO];
+		}
+	} else {
+		if ([self.delegate respondsToSelector:@selector(loaderDidFailWithError:)]) {
+			[self.delegate loaderDidFailWithError:[NSError errorWithDomain:@"Could not initialize image from retrieved data" code:-1 userInfo:nil]];
+		}
 	}
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];

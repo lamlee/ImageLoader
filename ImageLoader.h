@@ -22,13 +22,13 @@
 }
 
 @property(nonatomic, assign) NSObject <ImageLoaderDelegate> *delegate;
-@property(nonatomic, retain) NSString *filename;
-@property(nonatomic, retain) NSString *filepath;
-@property(nonatomic, retain) NSString *cachePath;
+@property(nonatomic, copy) NSString *filename;
+@property(nonatomic, copy) NSString *filepath;
+@property(nonatomic, copy) NSString *cachePath;
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, assign) BOOL shouldCacheImage;
-@property(nonatomic, retain) NSString *cacheIdentifier;
+@property(nonatomic, copy) NSString *cacheIdentifier;
 
 -(id)initWithDelegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
 -(id)initWithRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
