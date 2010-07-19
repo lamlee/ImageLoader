@@ -53,6 +53,11 @@
 	return self;
 }
 
+- (id)initWithRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {	
+	return [self initWithRemotePath:[aURL path] delegate:theDelegate];
+}
+
+
 - (void) dealloc {
 	self.delegate = nil;
 	self.filename = nil;
@@ -75,6 +80,11 @@
 	return loader;	
 }
 
++(id)loadFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	return [self loadFromRemotePath:[aURL path] delegate:theDelegate];
+}
+
+
 +(id)loadAndCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
@@ -86,6 +96,12 @@
 	return loader;	
 }
 
++(id)loadAndCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	return [self loadAndCacheFromRemotePath:[aURL path] delegate:theDelegate];
+}
+
+
+
 +(id)forceReloadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
@@ -96,6 +112,10 @@
 	return loader;	
 }
 
++(id)forceReloadFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	return [self forceReloadFromRemotePath:[aURL path] delegate:theDelegate];
+}
+
 +(id)refreshCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
@@ -104,6 +124,10 @@
 	} 
 	
 	return loader;	
+}
+
++(id)refreshCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+	return [self refreshCacheFromRemotePath:[aURL path] delegate:theDelegate];
 }
 
 -(BOOL)loadAndCache {

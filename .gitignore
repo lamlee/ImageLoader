@@ -1,5 +1,5 @@
 .DS_Store
 .svn
-Yves.mode1v3
-Yves.pbxuser
+*.mode1v3
+*.pbxuser
 build/*
