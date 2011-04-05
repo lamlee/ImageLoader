@@ -42,6 +42,8 @@
 +(id)refreshCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
 +(id)refreshCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate;
 
++(NSString *)generateUniqueFilename;
+
 -(BOOL)loadAndCache;
 -(BOOL)loadAndCache:(BOOL)doCaching;
 -(BOOL)loadAndCache:(BOOL)doCaching force:(BOOL)reload;

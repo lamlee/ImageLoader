@@ -135,6 +135,10 @@
 	return [self refreshCacheFromRemotePath:[aURL absoluteString] delegate:theDelegate];
 }
 
++(NSString *)generateUniqueFilename {
+    return [[NSProcessInfo processInfo] globallyUniqueString];
+}
+
 -(BOOL)loadAndCache {
 	return [self loadAndCache:YES force:NO];
 }
@@ -149,9 +153,9 @@
 		
 		NSLog(@"Loading file from cache: %@", [self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]);
 		
-		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {
+		if ([self.delegate respondsToSelector:@selector(imageLoader:didFinishWithResult:fromCache:)]) {
 			UIImage *image = [UIImage imageWithContentsOfFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]];
-			[self.delegate loaderDidFinishWithResult:image fromCache:YES];
+			[self.delegate imageLoader:self didFinishWithResult:image fromCache:YES];
 		}		
 		
 		return YES;
@@ -176,8 +180,8 @@
 			return YES;
 		} else {
 			
-			if ([self.delegate respondsToSelector:@selector(loaderDidFailWithError:)]) {
-				[self.delegate loaderDidFailWithError:[NSError errorWithDomain:@"Failed to load image" code:-1 userInfo:nil]];
+			if ([self.delegate respondsToSelector:@selector(imageLoader:didFailWithError:)]) {
+				[self.delegate imageLoader:self didFailWithError:[NSError errorWithDomain:@"Failed to load image" code:-1 userInfo:nil]];
 			}	
 				
 			return NO;
@@ -211,8 +215,8 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	
-	if ([self.delegate respondsToSelector:@selector(loaderDidFailWithError:)]) {
-		[self.delegate loaderDidFailWithError:error];
+	if ([self.delegate respondsToSelector:@selector(imageLoader:didFailWithError:)]) {
+		[self.delegate imageLoader:self didFailWithError:error];
 	}
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -230,12 +234,12 @@
 			[self.receivedData writeToFile:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier] atomically:YES];
 		}
 		
-		if ([self.delegate respondsToSelector:@selector(loaderDidFinishWithResult:fromCache:)]) {		
-			[self.delegate loaderDidFinishWithResult:image fromCache:NO];
+		if ([self.delegate respondsToSelector:@selector(imageLoader:didFinishWithResult:fromCache:)]) {		
+			[self.delegate imageLoader:self didFinishWithResult:image fromCache:NO];
 		}
 	} else {
-		if ([self.delegate respondsToSelector:@selector(loaderDidFailWithError:)]) {
-			[self.delegate loaderDidFailWithError:[NSError errorWithDomain:@"Could not initialize image from retrieved data" code:-1 userInfo:nil]];
+		if ([self.delegate respondsToSelector:@selector(imageLoader:didFailWithError:)]) {
+			[self.delegate imageLoader:self didFailWithError:[NSError errorWithDomain:@"Could not initialize image from retrieved data" code:-1 userInfo:nil]];
 		}
 	}
 	
@@ -247,8 +251,8 @@
 			 
 - (void)cancelConnection {
 	
-	if ([self.delegate respondsToSelector:@selector(loadedDidCancelConnection)]) {
-		[self.delegate loaderDidCancelConnection];
+	if ([self.delegate respondsToSelector:@selector(imageLoaderDidCancelConnection:)]) {
+		[self.delegate imageLoaderDidCancelConnection:self];
 	}
 	
 	[self.theConnection cancel];

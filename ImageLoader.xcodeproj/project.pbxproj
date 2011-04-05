@@ -165,7 +165,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ImageLoader_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
+				PRIVATE_HEADERS_FOLDER_PATH = "@executable_path/../lib";
 				PRODUCT_NAME = ImageLoader;
+				PUBLIC_HEADERS_FOLDER_PATH = "@executable_path/../lib";
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -180,7 +183,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ImageLoader_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
+				PRIVATE_HEADERS_FOLDER_PATH = "@executable_path/../lib";
 				PRODUCT_NAME = ImageLoader;
+				PUBLIC_HEADERS_FOLDER_PATH = "@executable_path/../lib";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};

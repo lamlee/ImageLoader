@@ -3,3 +3,7 @@
 *.mode1v3
 *.pbxuser
 build/*
+ImageLoader.xcodeproj/xcuserdata/*.xcuserdata
+ImageLoader.xcodeproj/*.mode1v3
+ImageLoader.xcodeproj/*.pbxuser
+ImageLoader.xcodeproj/xcuserdata/*.xcuserdata

@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class ImageLoader;
 
 @protocol ImageLoaderDelegate
 
--(void)loaderDidFinishWithResult:(UIImage *)image fromCache:(BOOL)wasCached;
+
+-(void)imageLoader:(ImageLoader *)theLoader didFinishWithResult:(UIImage *)image fromCache:(BOOL)wasCached;
 
 @optional
 
--(void)loaderDidFailWithError:(NSError *)error;
--(void)loaderDidCancelConnection;
+-(void)imageLoader:(ImageLoader *)theLoader didFailWithError:(NSError *)error;
+-(void)imageLoaderDidCancelConnection:(ImageLoader *)theLoader;
 
 
 
