@@ -10,7 +10,7 @@
 
 @interface ImageLoader (PrivateMethods)
 
--(NSString *)calculateCacheIdentifier;
+- (NSString *)calculateCacheIdentifier;
 
 @end
 
@@ -21,7 +21,7 @@
 @synthesize delegate, filename, filepath, cachePath, theConnection, receivedData, shouldCacheImage, cacheIdentifier;
 
 
--(id)init {
+- (id)init {
 
 	self = [super init];
 	
@@ -33,7 +33,7 @@
 	return self;
 }
 
--(id)initWithDelegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
+- (id)initWithDelegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	
 	self = [self init];
 	
@@ -74,7 +74,7 @@
 	[super dealloc];
 }
 
-+(id)loadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)loadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
@@ -85,12 +85,12 @@
 	return loader;	
 }
 
-+(id)loadFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)loadFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	return [self loadFromRemotePath:[aURL absoluteString] delegate:theDelegate];
 }
 
 
-+(id)loadAndCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)loadAndCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
@@ -101,13 +101,13 @@
 	return loader;	
 }
 
-+(id)loadAndCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)loadAndCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	return [self loadAndCacheFromRemotePath:[aURL absoluteString] delegate:theDelegate];
 }
 
 
 
-+(id)forceReloadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)forceReloadFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
 	if (loader != nil) {
@@ -117,11 +117,11 @@
 	return loader;	
 }
 
-+(id)forceReloadFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)forceReloadFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	return [self forceReloadFromRemotePath:[aURL absoluteString] delegate:theDelegate];
 }
 
-+(id)refreshCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)refreshCacheFromRemotePath:(NSString *)aPath delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	ImageLoader *loader = [[[ImageLoader alloc] initWithRemotePath:aPath delegate:theDelegate] autorelease];
 	
 	if (loader != nil) {
@@ -131,25 +131,25 @@
 	return loader;	
 }
 
-+(id)refreshCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
++ (id)refreshCacheFromRemoteURL:(NSURL *)aURL delegate:(NSObject <ImageLoaderDelegate> *)theDelegate {
 	return [self refreshCacheFromRemotePath:[aURL absoluteString] delegate:theDelegate];
 }
 
-+(NSString *)generateUniqueFilename {
++ (NSString *)generateUniqueFilename {
     return [[NSProcessInfo processInfo] globallyUniqueString];
 }
 
--(BOOL)loadAndCache {
+- (BOOL)loadAndCache {
 	return [self loadAndCache:YES force:NO];
 }
 
--(BOOL)loadAndCache:(BOOL)doCaching {
+- (BOOL)loadAndCache:(BOOL)doCaching {
 	return [self loadAndCache:doCaching force:NO];
 }
 
--(BOOL)loadAndCache:(BOOL)doCaching force:(BOOL)reload {
+- (BOOL)loadAndCache:(BOOL)doCaching force:(BOOL)reload {
 	
-	if(!reload && [[NSFileManager defaultManager] fileExistsAtPath:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]]) {			
+	if (!reload && [[NSFileManager defaultManager] fileExistsAtPath:[self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]]) {			
 		
 		NSLog(@"Loading file from cache: %@", [self.cachePath stringByAppendingPathComponent:self.cacheIdentifier]);
 		
@@ -190,7 +190,7 @@
 	return NO;	
 }
 
--(NSString *)calculateCacheIdentifier {
+- (NSString *)calculateCacheIdentifier {
 	const char *cStr = [self.filepath UTF8String];
 	unsigned char result[CC_MD5_DIGEST_LENGTH];
 	

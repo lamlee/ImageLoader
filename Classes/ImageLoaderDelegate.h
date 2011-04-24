@@ -13,12 +13,12 @@
 @protocol ImageLoaderDelegate
 
 
--(void)imageLoader:(ImageLoader *)theLoader didFinishWithResult:(UIImage *)image fromCache:(BOOL)wasCached;
+- (void)imageLoader:(ImageLoader *)theLoader didFinishWithResult:(UIImage *)image fromCache:(BOOL)wasCached;
 
 @optional
 
--(void)imageLoader:(ImageLoader *)theLoader didFailWithError:(NSError *)error;
--(void)imageLoaderDidCancelConnection:(ImageLoader *)theLoader;
+- (void)imageLoader:(ImageLoader *)theLoader didFailWithError:(NSError *)error;
+- (void)imageLoaderDidCancelConnection:(ImageLoader *)theLoader;
 
 
 
